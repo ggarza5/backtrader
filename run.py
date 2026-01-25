@@ -174,7 +174,7 @@ def main():
         epilog=__doc__
     )
     parser.add_argument('symbols', nargs='*', help='Stock symbols (e.g., AAPL MSFT)')
-    parser.add_argument('-s', '--strategy', default='sma', help='Strategy name or "all"')
+    parser.add_argument('-s', '--strategy', action='append', help='Strategy name(s) or "all". Can specify multiple.')
     parser.add_argument('-c', '--cash', type=float, default=100000, help='Starting cash')
     parser.add_argument('-p', '--plot', action='store_true', help='Show chart')
     parser.add_argument('--list', action='store_true', help='List strategies')
@@ -196,15 +196,17 @@ def main():
         return
 
     # Determine which strategies to run
-    if args.strategy == 'all':
+    if args.strategy is None:
+        strategies = ['sma']  # default
+    elif 'all' in args.strategy:
         strategies = [s for s in STRATEGIES.keys() if s != 'buyhold']
     else:
-        strategies = [args.strategy]
+        strategies = args.strategy
 
     # Run backtests
     print(f"\nRunning backtest(s)...")
     print(f"  Symbols: {', '.join(s.upper() for s in args.symbols)}")
-    print(f"  Strategy: {args.strategy}")
+    print(f"  Strategies: {', '.join(strategies)}")
     print(f"  Starting Cash: ${args.cash:,.2f}")
 
     results = []
