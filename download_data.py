@@ -74,18 +74,54 @@ def download_stock(symbol, start_date='2015-01-01', end_date='2024-12-31'):
 
 
 if __name__ == '__main__':
-    # Download TSLA and SPY
-    symbols = ['TSLA', 'SPY']
+    # Comprehensive list of symbols for strategy testing
+    symbols = [
+        # Major indices ETFs
+        'SPY', 'QQQ', 'IWM', 'DIA', 'VTI',
+        # Sector ETFs
+        'XLF', 'XLK', 'XLE', 'XLV', 'XLI', 'XLP', 'XLU', 'XLB', 'XLRE',
+        # Tech giants
+        'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'NVDA', 'TSLA',
+        # Finance
+        'JPM', 'BAC', 'GS', 'MS', 'V', 'MA',
+        # Healthcare
+        'JNJ', 'UNH', 'PFE', 'MRK', 'ABBV',
+        # Consumer
+        'WMT', 'COST', 'HD', 'MCD', 'NKE', 'SBUX',
+        # Energy
+        'XOM', 'CVX', 'COP', 'SLB',
+        # Industrial
+        'CAT', 'BA', 'GE', 'HON', 'UPS',
+        # Bonds & alternatives
+        'TLT', 'GLD', 'SLV', 'USO',
+        # Volatility
+        'VXX',
+        # International
+        'EEM', 'EFA', 'FXI',
+    ]
 
     print("="*50)
     print("DOWNLOADING STOCK DATA (from Stooq)")
+    print(f"Total symbols: {len(symbols)}")
     print("="*50 + "\n")
 
-    for symbol in symbols:
-        download_stock(symbol)
+    successful = []
+    failed = []
+
+    for i, symbol in enumerate(symbols, 1):
+        print(f"[{i}/{len(symbols)}] ", end="")
+        result = download_stock(symbol)
+        if result:
+            successful.append(symbol)
+        else:
+            failed.append(symbol)
         print()
-        time.sleep(1)
+        time.sleep(1)  # Be nice to the server
 
     print("="*50)
     print("DOWNLOAD COMPLETE")
+    print(f"Successful: {len(successful)}")
+    print(f"Failed: {len(failed)}")
+    if failed:
+        print(f"Failed symbols: {', '.join(failed)}")
     print("="*50)
